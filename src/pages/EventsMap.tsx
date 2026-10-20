@@ -60,7 +60,6 @@ export default function EventsMap(props: StackScreenProps<any>) {
     }, [isMapReady, events, userLocation]);
 
     const hasVolunteered = (event: Event) => event.volunteersIds.includes(authenticationContext?.value?.id ?? '');
-    const volunteeredCount = events.filter(hasVolunteered).length;
 
     const getMarkerImage = (event: Event) => {
         if (hasVolunteered(event)) return mapMarkerBlueImg;
@@ -68,7 +67,9 @@ export default function EventsMap(props: StackScreenProps<any>) {
         return mapMarkerImg;
     };
 
-    const handleNavigateToCreateEvent = () => {};
+    const handleNavigateToCreateEvent = () => {
+        navigation.navigate('SelectMapPosition', { initialPosition: userLocation });
+    };
 
     const handleNavigateToEventDetails = (event: Event) => {
         navigation.navigate('EventDetails', { event: { ...event, dateTime: event.dateTime.toISOString() } });
@@ -115,7 +116,7 @@ export default function EventsMap(props: StackScreenProps<any>) {
 
             <View style={styles.footer}>
                 <Text style={styles.footerText}>
-                    {events.length} event(s) found · {volunteeredCount} volunteered
+                    {events.length} event(s) found
                 </Text>
                 <RectButton
                     style={[styles.smallButton, { backgroundColor: '#00A3FF' }]}
