@@ -13,7 +13,7 @@ import { AuthenticationContext } from '../context/AuthenticationContext';
 import mapMarkerBlueImg from '../images/map-marker-blue.png';
 import mapMarkerGreyImg from '../images/map-marker-grey.png';
 import mapMarkerImg from '../images/map-marker.png';
-import * as api from '../services/api';
+import { getEventsFromNetworkOrCache } from '../services/caching';
 import { Event } from '../types/Event';
 import { parseDateFieldFromJSONResponse } from '../utils';
 
@@ -28,9 +28,9 @@ export default function EventsMap(props: StackScreenProps<any>) {
 
     useEffect(() => {
         if (!isFocused) return;
-        api.getEvents()
-            .then((response) => {
-                const allEvents: Event[] = parseDateFieldFromJSONResponse(response.data, 'dateTime');
+        getEventsFromNetworkOrCache()
+            .then((data) => {
+                const allEvents: Event[] = parseDateFieldFromJSONResponse(data as [], 'dateTime');
                 const now = new Date();
                 setEvents(allEvents.filter((event) => event.dateTime > now));
             })
